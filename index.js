@@ -2,8 +2,11 @@ const express = require('express')
 const app = express()
 const morgan = require('morgan')
 
+//the variable will change when a post request become successfull
+let personDataOnPost
+
 const tiny = (tokens, req, res) => {
-  return [
+  const consoleBody = [
     tokens.method(req, res),
     tokens.url(req, res),
     tokens.status(req, res),
@@ -11,8 +14,12 @@ const tiny = (tokens, req, res) => {
     '-',
     tokens['response-time'](req, res),
     'ms',
-  ].join(' ')
+  ]
+  return tokens.method(req, res) === 'POST'
+    ? [...consoleBody, JSON.stringify(personDataOnPost)].join(' ')
+    : [...consoleBody].join(' ')
 }
+
 //middlewares
 app.use(express.json())
 app.use(morgan(tiny))
@@ -63,6 +70,7 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
+//generate a random id for a successful post request data
 const generateId = () => {
   return Math.random() * 10000000
 }
@@ -87,6 +95,12 @@ app.post('/api/persons', (request, response) => {
     number: body.number,
     date: new Date(),
     id: generateId(),
+  }
+
+  //update the personDataOnPost to show the message in console using morgan middleware
+  personDataOnPost = {
+    name: body.name,
+    number: body.number,
   }
 
   persons = persons.concat(person)
