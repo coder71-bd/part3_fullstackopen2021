@@ -54,7 +54,20 @@ const generateId = () => {
 }
 app.post('/api/persons', (request, response) => {
   const body = request.body
+  const duplicatePerson = persons.find((person) => person.name === body.name)
 
+  //setting error based on name, number and duplication of name
+  let error = !body.name
+    ? { error: 'please provide name' }
+    : !body.number
+    ? { error: 'please provide number' }
+    : duplicatePerson
+    ? { error: 'name must be unique' }
+    : ''
+
+  if (error) {
+    return response.status(400).json(error)
+  }
   const person = {
     name: body.name,
     number: body.number,
