@@ -50,7 +50,7 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 const generateId = () => {
-  return Math.random() * 100000000
+  return Math.random() * 10000000
 }
 app.post('/api/persons', (request, response) => {
   const body = request.body
