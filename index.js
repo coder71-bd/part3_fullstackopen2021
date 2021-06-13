@@ -1,6 +1,7 @@
 const express = require('express')
-const app = express()
 const morgan = require('morgan')
+const cors = require('cors')
+const app = express()
 
 //the variable will change when a post request become successfull
 let personDataOnPost
@@ -23,6 +24,7 @@ const tiny = (tokens, req, res) => {
 //middlewares
 app.use(express.json())
 app.use(morgan(tiny))
+app.use(cors())
 
 let persons = [
   {
