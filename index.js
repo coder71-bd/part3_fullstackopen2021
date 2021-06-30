@@ -29,13 +29,7 @@ app.use(morgan(tiny))
 app.use(cors())
 app.use(express.static('build'))
 
-//get all person data from database
-app.get('/api/persons', (request, response) => {
-  Person.find({}).then((persons) => {
-    response.json(persons)
-  })
-})
-
+//info of all persons
 app.get('/info', (request, response) => {
   const currentDate = new Date()
   const data = `<div>Phonebook has info for ${Person.length} people</div>
@@ -43,6 +37,14 @@ app.get('/info', (request, response) => {
   response.send(data)
 })
 
+//get all persons data from database
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then((persons) => {
+    response.json(persons)
+  })
+})
+
+//find an individual person
 app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then((person) => {
@@ -60,6 +62,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch((error) => next(error))
 })
 
+//add a person to the database
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
@@ -118,6 +121,7 @@ const errorHandler = (error, request, response, next) => {
 
   next(error)
 }
+
 app.use(errorHandler)
 
 const PORT = process.env.PORT
