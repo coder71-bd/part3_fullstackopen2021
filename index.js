@@ -105,7 +105,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 //unknown endpoint error handler
 const unknownEndPoint = (request, response) => {
-  res.status(404).send({ error: 'unknown endpoint' })
+  response.status(404).send({ error: 'unknown endpoint' })
 }
 app.use(unknownEndPoint)
 
@@ -114,9 +114,9 @@ const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
-    return res.status(400).send({ error: 'malformated id' })
+    return response.status(400).send({ error: 'malformated id' })
   } else if (error.name === 'ValidationError') {
-    return res.status(400).send({ error: error.message })
+    return response.status(400).send({ error: error.message })
   }
 
   next(error)
